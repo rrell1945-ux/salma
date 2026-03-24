@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify for Sayang 💚</title>
+    <link href="https://fonts.googleapis.com/css2?family=Spotify+Circular:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Spotify Circular', -apple-system, sans-serif;
+            height: 100vh;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+        .now-playing {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            position: relative;
+        }
+        .cover-container {
+            width: 400px; height: 400px; margin-bottom: 48px;
+            perspective: 1000px;
+        }
+        .cover-art {
+            width: 100%; height: 100%; border-radius: 12px;
+            object-fit: cover; box-shadow: 0 24px 48px rgba(0,0,0,0.6);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation:linear infinite paused;
+        }
+        .cover-art.playing { animation-play-state: running; }
+        @keyframes spotifyRotate {
+            0% { transform: rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateY(360deg) rotateZ(360deg); }
+        }
+        .track-info {
+            text-align: center; max-width: 500px;
+        }
+        .track-title {
+            font-size: 48px; font-weight: 700; margin-bottom: 8px;
+            background: linear-gradient(135deg, #1db954, #1ed760); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .track-artist { 
+            font-size: 24px; opacity: 0.84; margin-bottom: 40px;
+        }
+        .player-controls {
+            display: flex; flex-direction: column; align-items: center; gap: 24px;
+        }
+        .main-controls {
+            display: flex; align-items: center; gap: 24px;
+        }
+        .btn-control {
+            width: 56px; height: 56px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.1); color: #fff; cursor: pointer;
+            backdrop-filter: blur(16px); transition: all 0.3s ease;
+        }
+        .btn-control:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        .btn-play {
+            width: 88px; height: 88px; background: #1db954;
+            font-size: 0; border: none; border-radius: 50%; cursor: pointer;
+            backdrop-filter: blur(16px);
+        }
+        .btn-play:hover { background: #1ed760; transform: scale(1.05); }
+        .btn-play::after {
+            content: '▶'; font-size: 36px; color: #fff; line-height: 88px;
+        }
+        .btn-play.paused::after { content: '⏸'; }
+        .progress-container {
+            display: flex; align-items: center; gap: 16px; width: 500px;
+        }
+        .time-display {
+            font-size: 14px; opacity: 0.7; min-width: 48px; text-align: center;
+        }
+        .progress-bar {
+            flex: 1; height: 4px; background: rgba(255,255,255,0.3);
+            border-radius: 2px; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background: #1db954; width: 0%;
+            border-radius: 2px; transition: width 0.1s ease;
+            position: relative;
+        }
+        .progress-fill::after {
+            content: ''; position: absolute; top: -4px; right: -4px;
+            width: 12px; height: 12px; background: #1db954; border-radius: 50%;
+            box-shadow: 0 0 0 2px #000;
+        }
+        .volume-controls {
+            display: flex; align-items: center; gap: 16px; opacity: 0.7;
+        }
+        .visualizer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; opacity: 0.1;
+        }
+        @media (max-width: 768px) {
+            .track-title { font-size: 32px; }
+            .track-artist { font-size: 20px; }
+            .cover-art { width: 280px; height: 280px; }
+            .progress-container { width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="visualizer" id="visualizer"></canvas>
+    
+    <div class="now-playing">
+        <div class="cover-container">
+            <img class="cover-art" id="coverArt" src="image copy 4.png" alt="Cover">
+        </div>
+        
+        <div class="track-info">
+            <div class="track-title" id="trackTitle">Loading...</div>
+            <div class="track-artist" id="trackArtist">Artist</div>
+        </div>
+        
+        <div class="player-controls">
+            <div class="main-controls">
+                <button class="btn-control" onclick="prevTrack()" title="Previous">⏮</button>
+                <button class="btn-play paused" id="playBtn" onclick="togglePlay()" title="Play/Pause"></button>
+                <button class="btn-control" onclick="nextTrack()" title="Next">⏭</button>
+            </div>
+            
+            <div class="progress-container">
+                <span class="time-display" id="currentTime">0:00</span>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="time-display" id="durationTime">0:00</span>
+            </div>
+            
+            <div class="volume-controls">
+                <button class="btn-control" onclick="toggleVolume()" title="Volume">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tracks = [
+            {
+                title: "Penjaga hati",
+                artist: "Nadhif basalamah",
+                audio: "nadhif basalamah - penjaga hati (Official Lyric Video).mp3",
+                cover: "image copy 4.png",
+                duration: 180
+            },
+            {
+                title: "kota ini tak sama tanpamu",
+                artist: "Nadhif basalamah",
+                audio: "Nadhif Basalamah - kota ini tak sama tanpamu (Official Audio) [6Ani_PO5lE8].mp3",
+                cover: "0cb6540c4ab256b862004af058df9bd9.1000x1000x1.png",
+                duration: 210
+            }
+        ];
+        
+        let currentTrack = 0;
+        let isPlaying = false;
+        const audio = new Audio();
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+        
+        // Visualizer setup
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
+            
+            // Visualizer
+            drawVisualizer();
+        });
+        
+        audio.addEventListener('loadedmetadata', () => {
+            document.getElementById('durationTime').textContent = formatTime(audio.duration);
+        });
+        
+        audio.addEventListener('ended', nextTrack);
+        audio.addEventListener('play', () => {
+            document.getElementById('playBtn').classList.remove('paused');
+            document.getElementById('coverArt').classList.add('playing');
+            isPlaying = true;
+        });
+        audio.addEventListener('pause', () => {
+            document.getElementById('playBtn').classList.add('paused');
+            document.getElementById('coverArt').classList.remove('playing');
+            isPlaying = false;
+        });
+        
+        function loadTrack(index) {
+            const track = tracks[index];
+            document.getElementById('trackTitle').textContent = track.title;
+            document.getElementById('trackArtist').textContent = track.artist;
+            document.getElementById('coverArt').src = track.cover;
+            audio.src = track.audio;
+            currentTrack = index;
+        }
+        
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+        }
+        
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            loadTrack(currentTrack);
+            if (isPlaying) audio.play();
+        }
+        
+        function prevTrack() {
+            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+            loadTrack(currentTrack);
+            if (isPlaying) audio.play();
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function drawVisualizer() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const barWidth = 4;
+            const barCount = 50;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2 + 200;
+            
+            for (let i = 0; i < barCount; i++) {
+                const angle = (Math.PI * 2 / barCount) * i;
+                const radius = 100 + Math.sin(audio.currentTime + i) * 50;
+                const barHeight = (Math.random() * 100) + 50;
+                
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle);
+                
+                ctx.fillStyle = `hsl(${220 + i * 2}, 70%, 50%)`;
+                ctx.fillRect(0, -barHeight / 2, barWidth, barHeight);
+                ctx.restore();
+            }
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Load first track
+        loadTrack(0);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlay();
+            } else if (e.code === 'ArrowRight') nextTrack();
+            else if (e.code === 'ArrowLeft') prevTrack();
+        });
+        
+        // Progress click
+        document.getElementById('progressBar').addEventListener('click', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const progress = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = progress * audio.duration;
+        });
+    </script>
+</body>
+</html>
