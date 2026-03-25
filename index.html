@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Langit Kejutan & Spotify Ultra 💚</title>
+    <link href="https://fonts.googleapis.com/css2?family=Spotify+Circular:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Langit Background - FIXED untuk semua section */
+        .sky-bg {
+            height: 100vh;
+            background: linear-gradient(135deg, 
+                #87CEEB 0%, 
+                #98D8E8 25%, 
+                #B0E0E6 50%, 
+                #E0F6FF 75%, 
+                #F0F8FF 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* AWAN BERGERAK KECIL - SELALU AKTIF */
+        .moving-cloud {
+            position: absolute;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 50%;
+            filter: drop-shadow(0 8px 25px rgba(255,255,255,0.8));
+            animation: floatCloud linear infinite;
+            z-index: 2;
+        }
+
+        /* Ukuran AWAN BERGERAK (KECIL) */
+        .cloud-small { width: 60px; height: 40px; }
+        .cloud-medium { width: 100px; height: 60px; }
+        .cloud-large { width: 140px; height: 80px; }
+
+        .cloud-small::before,
+        .cloud-medium::before,
+        .cloud-large::before {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+            top: -15px;
+            left: 15px;
+        }
+
+        .cloud-small::after,
+        .cloud-medium::after,
+        .cloud-large::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+            top: -12px;
+            left: initial;
+            right: 10px;
+        }
+
+        .cloud-small::before { width: 30px; height: 30px; }
+        .cloud-medium::before { width: 50px; height: 45px; }
+        .cloud-large::before { width: 70px; height: 60px; }
+
+        .cloud-small::after { width: 40px; height: 35px; }
+        .cloud-medium::after { width: 60px; height: 50px; }
+        .cloud-large::after { width: 80px; height: 70px; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-200px) translateY(0px) scale(1); opacity: 0.7; }
+            50% { opacity: 1; transform: translateX(20vw) translateY(-10px) scale(1.05); }
+            100% { transform: translateX(calc(100vw + 200px)) translateY(-5px) scale(0.95); opacity: 0.7; }
+        }
+
+        .section1 {
+            height: 100vh;
+            position: relative;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out;
+        }
+
+        /* AWAN TEXT BESAR & KHUSUS - BEDA UKURAN! */
+        .text-cloud {
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translateX(-50%);
+            /* UKURAN BESAR & KHUSUS UNTUK TEXT */
+            width: 580px;
+            height: 400px;
+            background: 
+                radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.98) 0%, rgba(248,249,250,0.95) 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.96) 0%, rgba(252,252,253,0.92) 60%);
+            border-radius: 60% 40% 35% 65% / 55% 45% 55% 45%;
+            z-index: 5;
+            filter: 
+                drop-shadow(0 25px 50px rgba(255,255,255,0.85))
+                drop-shadow(0 0 40px rgba(255,255,255,0.7));
+            transition: opacity 1s ease-out;
+            animation: gentleFloat 7s ease-in-out infinite;
+        }
+
+        /* BUBBLE AWAN TEXT - LEBIH REALISTIS */
+        .text-cloud::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 130px;
+            background: inherit;
+            border-radius: 50% 60% 50% 40% / 55% 50% 50% 45%;
+            top: -55px;
+            left: 45px;
+            box-shadow: inset -15px -15px 30px rgba(255,255,255,0.9);
+        }
+
+        .text-cloud::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 160px;
+            background: inherit;
+            border-radius: 55% 65% 45% 55% / 60% 55% 45% 50%;
+            top: -45px;
+            left: initial;
+            right: 25px;
+            box-shadow: inset -20px -20px 40px rgba(255,255,255,0.85);
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
+            33% { transform: translateX(-50%) translateY(-4px) rotate(0.5deg); }
+            66% { transform: translateX(-52%) translateY(-8px) rotate(-0.3deg); }
+        }
+
+        .main-text {
+            position: relative;
+            z-index: 6;
+            text-align: center;
+            color: #2c3e50;
+            text-shadow: 
+                4px 4px 8px rgba(255,255,255,0.95),
+                0 0 25px rgba(255,255,255,0.8);
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.1;
+            padding: 20px 40px;
+            transition: opacity 1s ease-out;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 25px;
+            z-index: 15;
+            transition: opacity 1s ease-out;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(255,107,107,0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #95a5a6, #bdc3c7);
+            color: #2c3e50;
+            position: relative;
+            z-index: 20;
+        }
+
+        .btn-no:hover {
+            transform: translateX(10px);
+        }
+
+        /* Section 2 */
+        .section2 {
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section2-title {
+            color: #2c3e50;
+            text-shadow: 3px 3px 6px rgba(255,255,255,0.9);
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 3rem;
+            text-align: center;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+            max-width: 700px;
+            width: 90%;
+        }
+
+        .choice-item {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255,255,255,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .choice-item:hover::before { left: 100%; }
+
+        .choice-item:hover {
+            transform: translateY(-15px) scale(1.08);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            border-color: rgba(255,107,107,0.8);
+        }
+
+        .choice-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .choice-item:hover .choice-icon {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .choice-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .choice-desc {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        /* Efek Fade Out */
+        .section1.fade-out,
+        .section1.fade-out .text-cloud,
+        .section1.fade-out .main-text,
+        .section1.fade-out .btn-group {
+            opacity: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-text { font-size: 2rem; }
+            .section2-title { font-size: 2rem; }
+            .choices-grid { grid-template-columns: 1fr; gap: 25px; }
+            .btn-group { flex-direction: column; gap: 15px; }
+            .text-cloud { 
+                width: 320px; 
+                height: 150px;
+                top: 25%;
+            }
+            .main-text { padding: 15px 25px; }
+
+            /* Spotify Responsive */
+            .spotify-player-now-playing { padding: 0 16px; }
+            .spotify-player-track-title { font-size: 28px; }
+            .spotify-player-track-artist { font-size: 18px; }
+            .spotify-player-cover-art { width: 260px; height: 260px; }
+            .spotify-player-progress-container { width: 280px; }
+        }
+
+        /* Spotify Player Styles - Scoped */
+        .spotify-player {
+            font-family: 'Spotify Circular', -apple-system, sans-serif;
+        }
+        .spotify-player-now-playing {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            position: relative;
+        }
+        .spotify-player-cover-container {
+            width: 400px; height: 400px; margin-bottom: 48px;
+            perspective: 1000px;
+        }
+        .spotify-player-cover-art {
+            width: 100%; height: 100%; border-radius: 12px;
+            object-fit: cover; box-shadow: 0 24px 48px rgba(0,0,0,0.6);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: linear infinite paused;
+        }
+        .spotify-player-cover-art.spotify-player-playing { animation-play-state: running; }
+        @keyframes spotify-player-rotate {
+            0% { transform: rotateY(0deg) rotateZ(0deg); }
+            100% { transform: rotateY(360deg) rotateZ(360deg); }
+        }
+        .spotify-player-track-info {
+            text-align: center; max-width: 500px;
+        }
+        .spotify-player-track-title {
+            font-size: 48px; font-weight: 700; margin-bottom: 8px;
+            background: linear-gradient(135deg, #1db954, #1ed760); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .spotify-player-track-artist { 
+            font-size: 24px; opacity: 0.84; margin-bottom: 40px;
+        }
+        .spotify-player-player-controls {
+            display: flex; flex-direction: column; align-items: center; gap: 24px;
+        }
+        .spotify-player-main-controls {
+            display: flex; align-items: center; gap: 24px;
+        }
+        .spotify-player-btn-control {
+            width: 56px; height: 56px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.1); color: #fff; cursor: pointer;
+            backdrop-filter: blur(16px); transition: all 0.3s ease;
+        }
+        .spotify-player-btn-control:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        .spotify-player-btn-play {
+            width: 88px; height: 88px; background: #1db954;
+            font-size: 0; border: none; border-radius: 50%; cursor: pointer;
+            backdrop-filter: blur(16px);
+        }
+        .spotify-player-btn-play:hover { background: #1ed760; transform: scale(1.05); }
+        .spotify-player-btn-play::after {
+            content: '▶'; font-size: 36px; color: #fff; line-height: 88px;
+        }
+        .spotify-player-btn-play.spotify-player-paused::after { content: '⏸'; }
+        .spotify-player-progress-container {
+            display: flex; align-items: center; gap: 16px; width: 500px;
+        }
+        .spotify-player-time-display {
+            font-size: 14px; opacity: 0.7; min-width: 48px; text-align: center;
+        }
+        .spotify-player-progress-bar {
+            flex: 1; height: 4px; background: rgba(255,255,255,0.3);
+            border-radius: 2px; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .spotify-player-progress-fill {
+            height: 100%; background: #1db954; width: 0%;
+            border-radius: 2px; transition: width 0.1s ease;
+            position: relative;
+        }
+        .spotify-player-progress-fill::after {
+            content: ''; position: absolute; top: -4px; right: -4px;
+            width: 12px; height: 12px; background: #1db954; border-radius: 50%;
+            box-shadow: 0 0 0 2px #000;
+        }
+        .spotify-player-volume-controls {
+            display: flex; align-items: center; gap: 16px; opacity: 0.7;
+        }
+        .spotify-player-visualizer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; opacity: 0.1;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="sky-bg">
+        <div class="moving-cloud cloud-small" style="animation-duration: 30s; left: -200px; top: 15%;"></div>
+        <div class="moving-cloud cloud-medium" style="animation-duration: 40s; animation-delay: -10s; left: -250px; top: 35%;"></div>
+        <div class="moving-cloud cloud-large" style="animation-duration: 50s; animation-delay: -20s; left: -300px; top: 55%;"></div>
+        <div class="moving-cloud cloud-small" style="animation-duration: 35s; animation-delay: -5s; top: 70%; left: -180px;"></div>
+        <div class="moving-cloud cloud-medium" style="animation-duration: 45s; animation-delay: -15s; top: 8%; left: -220px;"></div>
+    </div>
+
+    <section id="section1" class="section1">
+        <div class="text-cloud"></div>
+        
+        <h1 class="main-text">Haiii Sayang ✨<br>Aku ada kejutan!</h1>
+        
+        <div class="btn-group">
+            <button class="btn btn-yes" onclick="transitionToSection2()">Buka Kejutan 💝</button>
+        </div>
+    </section>
+
+    <section id="section2" class="section2">
+        <h1 class="section2-title">Pilih Kejutanmu! 🎁</h1>
+        
+<div class="choices-grid" style="grid-template-rows: 1fr 1fr; grid-template-columns: 1fr 1fr;">
+<div class="choice-item" id="choice1" onclick="window.location.href='https://heyzine.com/flip-book/597caf20ed.html'">
+<div class="choice-icon">
+    <img src="i/image-removebg-preview.png" alt="Custom Icon" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+</div>
+                <div class="choice-text">scrapbook</div>
+            </div>
+<div class="choice-item" id="choice2" onclick="window.location.href='https://parelh.my.canva.site/buka-donggg'">
+<div class="choice-icon">
+    <img src="i/image.png"alt="Custom Icon" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+</div>
+                <div class="choice-text">Buket Cantik</div>
+            </div>
+            <div class="choice-item" id="choice3" onclick="showSpotifyPlayer()" style="grid-column: 1 / span 2; grid-row: 2;">
+<div class="choice-icon">
+    <img src="i/image copy.png" alt="Custom Icon" style="width:90px;height:90px;border-radius:50%;object-fit:cover;">
+</div>
+                <div class="choice-text">Spotify Ultra</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spotify Player Section - Hidden by default -->
+    <div id="spotify-section" class="spotify-player" style="display: none; height: 100vh; position: relative; z-index: 20; background: linear-gradient(135deg, rgba(255,182,193,0.9) 0%, rgba(221,160,221,0.85) 30%, rgba(176,224,230,0.9) 60%, rgba(255,218,185,0.95) 100%); backdrop-filter: blur(5px);">
+        <canvas class="spotify-player-visualizer" id="spotify-visualizer"></canvas>
+        
+        <div class="spotify-player-now-playing">
+            <div class="spotify-player-cover-container">
+                <img class="spotify-player-cover-art" id="spotify-coverArt" src="i/image copy 4.png" alt="Cover">
+            </div>
+            
+            <div class="spotify-player-track-info">
+                <div class="spotify-player-track-title" id="spotify-trackTitle">Loading...</div>
+                <div class="spotify-player-track-artist" id="spotify-trackArtist">Artist</div>
+            </div>
+            
+            <div class="spotify-player-player-controls">
+                <div class="spotify-player-main-controls">
+                    <button class="spotify-player-btn-control" onclick="spotifyPrevTrack()" title="Previous">⏮</button>
+                    <button class="spotify-player-btn-play spotify-player-paused" id="spotify-playBtn" onclick="spotifyTogglePlay()" title="Play/Pause"></button>
+                    <button class="spotify-player-btn-control" onclick="spotifyNextTrack()" title="Next">⏭</button>
+                </div>
+                
+                <div class="spotify-player-progress-container">
+                    <span class="spotify-player-time-display" id="spotify-currentTime">0:00</span>
+                    <div class="spotify-player-progress-bar" id="spotify-progressBar">
+                        <div class="spotify-player-progress-fill" id="spotify-progressFill"></div>
+                    </div>
+                    <span class="spotify-player-time-display" id="spotify-durationTime">0:00</span>
+                </div>
+                
+                <div class="spotify-player-volume-controls">
+                    <button class="spotify-player-btn-control" onclick="spotifyToggleVolume()" title="Volume">🔊</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Spotify Player JS - Scoped
+        const spotifyTracks = [
+            {
+                title: "Penjaga hati",
+                artist: "Nadhif basalamah",
+                audio: "audio/nadhif basalamah - penjaga hati (Official Lyric Video).mp3",
+                cover: "i/image copy 4.png",
+                duration: 180
+            },
+            {
+                title: "kota ini tak sama tanpamu",
+                artist: "Nadhif basalamah",
+                audio: "audio/Nadhif Basalamah - kota ini tak sama tanpamu (Official Audio) [6Ani_PO5lE8].mp3",
+                cover: "i/0cb6540c4ab256b862004af058df9bd9.1000x1000x1.png",
+                duration: 210
+            }
+        ];
+        
+        let spotifyCurrentTrack = 0;
+        let spotifyIsPlaying = false;
+        const spotifyAudio = new Audio();
+        const spotifyCanvas = document.getElementById('spotify-visualizer');
+        const spotifyCtx = spotifyCanvas ? spotifyCanvas.getContext('2d') : null;
+        
+        // Visualizer setup
+        if (spotifyCanvas) {
+            spotifyCanvas.width = window.innerWidth;
+            spotifyCanvas.height = window.innerHeight;
+        }
+
+        function spotifyLoadTrack(index) {
+            const track = spotifyTracks[index];
+            document.getElementById('spotify-trackTitle').textContent = track.title;
+            document.getElementById('spotify-trackArtist').textContent = track.artist;
+            document.getElementById('spotify-coverArt').src = track.cover;
+            spotifyAudio.src = track.audio;
+            spotifyCurrentTrack = index;
+        }
+        
+        function spotifyTogglePlay() {
+            if (spotifyIsPlaying) {
+                spotifyAudio.pause();
+            } else {
+                spotifyAudio.play();
+            }
+        }
+        
+        function spotifyNextTrack() {
+            spotifyCurrentTrack = (spotifyCurrentTrack + 1) % spotifyTracks.length;
+            spotifyLoadTrack(spotifyCurrentTrack);
+            if (spotifyIsPlaying) spotifyAudio.play();
+        }
+        
+        function spotifyPrevTrack() {
+            spotifyCurrentTrack = (spotifyCurrentTrack - 1 + spotifyTracks.length) % spotifyTracks.length;
+            spotifyLoadTrack(spotifyCurrentTrack);
+            if (spotifyIsPlaying) spotifyAudio.play();
+        }
+
+        function spotifyFormatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function spotifyDrawVisualizer() {
+            if (!spotifyCtx) return;
+            spotifyCtx.fillStyle = 'rgba(0,0,0,0.1)';
+            spotifyCtx.fillRect(0, 0, spotifyCanvas.width, spotifyCanvas.height);
+            
+            const barWidth = 4;
+            const barCount = 50;
+            const centerX = spotifyCanvas.width / 2;
+            const centerY = spotifyCanvas.height / 2 + 200;
+            
+            for (let i = 0; i < barCount; i++) {
+                const angle = (Math.PI * 2 / barCount) * i;
+                const radius = 100 + Math.sin(spotifyAudio.currentTime + i) * 50;
+                const barHeight = (Math.random() * 100) + 50;
+                
+                spotifyCtx.save();
+                spotifyCtx.translate(centerX, centerY);
+                spotifyCtx.rotate(angle);
+                
+                spotifyCtx.fillStyle = `hsl(${220 + i * 2}, 70%, 50%)`;
+                spotifyCtx.fillRect(0, -barHeight / 2, barWidth, barHeight);
+                spotifyCtx.restore();
+            }
+        }
+
+        spotifyAudio.addEventListener('timeupdate', () => {
+            const progress = (spotifyAudio.currentTime / spotifyAudio.duration) * 100;
+            document.getElementById('spotify-progressFill').style.width = progress + '%';
+            document.getElementById('spotify-currentTime').textContent = spotifyFormatTime(spotifyAudio.currentTime);
+            spotifyDrawVisualizer();
+        });
+        
+        spotifyAudio.addEventListener('loadedmetadata', () => {
+            document.getElementById('spotify-durationTime').textContent = spotifyFormatTime(spotifyAudio.duration);
+        });
+        
+        spotifyAudio.addEventListener('ended', spotifyNextTrack);
+        spotifyAudio.addEventListener('play', () => {
+            document.getElementById('spotify-playBtn').classList.remove('spotify-player-paused');
+            document.getElementById('spotify-coverArt').classList.add('spotify-player-playing');
+            spotifyIsPlaying = true;
+        });
+        spotifyAudio.addEventListener('pause', () => {
+            document.getElementById('spotify-playBtn').classList.add('spotify-player-paused');
+            document.getElementById('spotify-coverArt').classList.remove('spotify-player-playing');
+            spotifyIsPlaying = false;
+        });
+        
+        // Load first track on init
+        spotifyLoadTrack(0);
+
+        // Window resize for canvas
+        window.addEventListener('resize', () => {
+            if (spotifyCanvas) {
+                spotifyCanvas.width = window.innerWidth;
+                spotifyCanvas.height = window.innerHeight;
+            }
+        });
+        
+        // Progress click
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'spotify-progressBar') {
+                const rect = e.target.getBoundingClientRect();
+                const progress = (e.clientX - rect.left) / rect.width;
+                spotifyAudio.currentTime = progress * spotifyAudio.duration;
+            }
+        });
+
+        // Keyboard shortcuts for Spotify (space, arrows)
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('spotify-section').style.display !== 'none') {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    spotifyTogglePlay();
+                } else if (e.code === 'ArrowRight') {
+                    spotifyNextTrack();
+                } else if (e.code === 'ArrowLeft') {
+                    spotifyPrevTrack();
+                }
+            }
+        });
+
+        function showSpotifyPlayer() {
+            document.getElementById('section2').style.display = 'none';
+            document.getElementById('spotify-section').style.display = 'block';
+            spotifyLoadTrack(0);
+            spotifyTogglePlay(); // Auto play first track
+        }
+
+        function spotifyToggleVolume() {
+            // Simple volume toggle - mute/unmute
+            spotifyAudio.muted = !spotifyAudio.muted;
+        }
+
+        let noButtonClicks = 0;
+        const maxNoClicks = 8;
+        let isTransitioning = false;
+
+        function transitionToSection2() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            
+            // AWAN TEXT + TEXT + TOMBOL PUDAR (AWAN KECIL TETAP BERGERAK)
+            document.getElementById('section1').classList.add('fade-out');
+            
+            setTimeout(() => {
+                document.getElementById('section1').style.display = 'none';
+                document.getElementById('section2').style.display = 'flex';
+                isTransitioning = false;
+            }, 1000);
+        }
+
+        function slowSlideAway(event) {
+            if (isTransitioning) return;
+            
+            noButtonClicks++;
+            const noBtn = document.getElementById('noBtn');
+            
+            noBtn.textContent = texts[Math.min(noButtonClicks - 1, texts.length - 1)];
+
+            if (noButtonClicks >= maxNoClicks) {
+                setTimeout(() => {
+                    transitionToSection2();
+                }, 1200);
+            }
+        }
+
+        // FUNGSI LANJUTAN UNTUK MEMILIH KEJUTAN
+        function selectChoice(choiceId) {
+            const results = {
+                1: { 
+                    title: "Kue Spesial 🎂", 
+                    text: "Selamat! Kamu mendapatkan kue virtual termanis di dunia. Semoga harimu semanis gula dan seindah pelangi ya sayang! ✨" 
+                },
+                2: { 
+                    title: "Buket Cantik 🌹", 
+                    text: "Bunga-bunga ini mekar khusus hanya untukmu. Wanginya adalah bentuk kasih sayangku yang tak akan pernah layu. I love you! 💖" 
+                },
+                3: { 
+                    title: "Surat Cinta 💌", 
+                    text: "Di setiap baris kata ini, ada namamu yang terukir abadi. Kamu adalah alasan aku tersenyum dan bahagia setiap harinya. 🥰" 
+                }
+            };
+
+            const selection = results[choiceId];
+            const section2 = document.getElementById('section2');
+
+            // Mengganti tampilan Section 2 dengan hasil kejutan
+            section2.innerHTML = `
+                <div style="text-align: center; animation: fadeInUp 1s ease-out; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); max-width: 500px; margin: 0 20px; z-index: 10;">
+                    <h1 style="font-size: 3rem; margin-bottom: 20px;">${selection.title}</h1>
+                    <p style="font-size: 1.2rem; color: #34495e; line-height: 1.6; margin-bottom: 30px;">${selection.text}</p>
+                    <button class="btn btn-yes" onclick="location.reload()">Mulai Lagi 🔄</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
+
